@@ -1,0 +1,66 @@
+--- origsrc/libpano13-2.9.17/configure.ac	2010-01-30 08:29:48.000000000 -0600
++++ src/libpano13-2.9.17/configure.ac	2010-05-30 02:40:12.140926300 -0500
+@@ -56,11 +56,6 @@ case "${host_os}" in
+     HCPU="${host_cpu}"
+     ;;
+   *cygwin*)
+-    PANO_WIN32_RESOURCE=pano13.lo
+-    CFLAGS="-mno-cygwin $CFLAGS"
+-    CPPFLAGS="-mno-cygwin $CPPFLAGS"
+-    CXXFLAGS="-mno-cygwin $CXXFLAGS"
+-    LDFLAGS="-mno-cygwin $LDFLAGS"
+     HSYS=cygwin
+     HCPU="${host_cpu}"
+     ;;
+--- origsrc/libpano13-2.9.17/Makefile.am	2010-04-24 17:30:40.000000000 -0500
++++ src/libpano13-2.9.17/Makefile.am	2010-05-30 03:02:22.251004300 -0500
+@@ -29,15 +29,13 @@ X11_SRC =
+ endif
+ 
+ if HAVE_CYGWIN
+-WIN_SRC =  sys_ansi.c bmp.c
+-WIN_DEFS = -D__Win__=1
+-WIN_LDFS = -mwindows -avoid-version -no-undefined -export-symbols $(srcdir)/libpano13.def 
+-
+-$(PANO_WIN32_RESOURCE): pano13.rc
+-	        $(top_srcdir)/build/win32/lt-compile-resource pano13.rc $@
++WIN_SRC =  sys_ansi.c ppm.c
++WIN_DEFS = -D__Ansi__=1
++WIN_LDFS = -version-info 2:0:0 -no-undefined
+ 
+ install-exec-hook:
+-	mv $(DESTDIR)$(bindir)/cygpano13.dll $(DESTDIR)$(bindir)/pano13.dll
++	@true
++
+ endif
+ 
+ if HAVE_MINGW
+--- origsrc/libpano13-2.9.17/tools/Makefile.am	2009-12-27 16:20:50.000000000 -0600
++++ src/libpano13-2.9.17/tools/Makefile.am	2010-05-30 02:52:59.262803200 -0500
+@@ -5,15 +5,12 @@ INCLUDES    = -I${top_srcdir}
+ PANOLIB=pano13
+ 
+ if HAVE_CYGWIN
+-WIN_SRC =  panoinfo.c
+-else
+-WIN_SRC =
++WIN_SRC =  panoinfo_unix.c
++WIN_DEFS = -D__Ansi__=1
+ endif
+ 
+ if HAVE_MINGW
+ WIN_SRC =  panoinfo.c
+-else
+-WIN_SRC =
+ endif
+ 
+ if HAVE_LINUX
+@@ -33,7 +30,7 @@ DAR_DEFS =
+ endif
+ 
+ AM_CPPFLAGS = $(JAVA_FLAGS) $(LIN_DEFS) $(DAR_DEFS) $(TIFF_FLAGS) $(JPEG_FLAGS)
+-AM_LDFLAGS  = -L${top_builddir}
++AM_LDFLAGS  = -L${top_builddir}/.libs
+ 
+ # PTAInterpolate can only be compiled with ptpicker.h, which in turn depends on java
+ if HasJava

@@ -1,0 +1,10 @@
+DESCRIPTION="Panorama Tools library"
+HOMEPAGE="http://panotools.sourceforge.net/"
+SRC_URI="mirror://sourceforge/panotools/${P}.tar.gz"
+
+PATCH_URI="
+	2.9.17-build.patch
+	2.9.17-typedef-UCHAR.patch
+"
+
+MAKEOPTS+=" -j1"

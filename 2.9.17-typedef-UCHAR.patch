@@ -1,0 +1,19 @@
+Fixes build of hugin when built against ODBC-enabled wxWidgets:
+
+http://bugs.gentoo.org/show_bug.cgi?id=269689
+
+--- origsrc/libpano13-2.9.17/filter.h	2010-04-05 19:03:25.000000000 -0500
++++ src/libpano13-2.9.17/filter.h	2010-10-14 22:47:08.883320400 -0500
+@@ -47,9 +47,9 @@
+ 
+ //---------------------- Types ---------------------------------------------
+ 
+-#define UCHAR	unsigned char
+-#define USHORT  unsigned short
+-#define ULONG   unsigned long
++typedef unsigned char UCHAR;
++typedef unsigned short USHORT;
++typedef unsigned long ULONG;
+ 
+ enum{
+ 	_UCHAR,
